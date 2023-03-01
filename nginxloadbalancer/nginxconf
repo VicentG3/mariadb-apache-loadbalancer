@@ -1,6 +1,7 @@
 upstream loadbalancer {
-server 172.17.0.1:5001 weight=6;
-server 172.17.0.1:5002 weight=4;
+server www1 weight=1;
+server www2 weight=1;
+server www3 weight=1;
 }
 server {
 location / {
