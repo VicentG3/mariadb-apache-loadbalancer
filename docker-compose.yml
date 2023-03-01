@@ -1,57 +1,53 @@
 version: "3.3"
 services:
-    basededades:
-        image: mysql
-        ports: 
-            - "3306:3306"
+    mariadb:
+        image: mariadb
+        restart: always
         environment:
-            MYSQL_DATABASE: dbP9
-            MYSQL_PASSWORD: contrasenya
-            MYSQL_USER: usuarioP9
-            MYSQL_ROOT_PASSWORD: contrasenyaP9
+        MYSQL_ROOT_PASSWORD: password
+        MYSQL_DATABASE: projectdb
+        MYSQL_USER: test
+        MYSQL_PASSWORD: test123
+        ports: 
+        - "3306:3306"
         volumes:
-            - mivolumen:/var/lib/mysql
-        networks:
-            - default
+        - mariadbdata:/var/lib/mysql
+
     www1:
-        build: .
+        build: ./apachesql
         ports: 
             - "81:80"
         volumes:
             - /home/admin/web1:/var/www/html
-        links:
-            - basededades
-        networks:
-            - default
 
     www2:
-        build: .
+        build: ./apachesql
         ports: 
             - "82:80"
         volumes:
             - /home/admin/web2:/var/www/html
-        links:
-            - basededades
-        networks:
-            - default
 
     www3:
-        build: .
+        build: ./apachesql
         ports: 
             - "83:80"
         volumes:
             - /home/admin/web3:/var/www/html
-        links:
-            - basededades
-        networks:
-            - default
+    
+    nginx:
+        build: ./nginx
+        ports:
+            - "80:80"
  
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
-        links: 
-            - basededades:db
+        environment:
+            - PMA_ARBITRARY=1
+            - PMA_HOST=mariadb
+            - PMA_USER=root
+            - PMA_PASSWORD=password
         ports:
             - 84:80
 volumes:
-    mivolumen:
+    mariadbdata:
 
